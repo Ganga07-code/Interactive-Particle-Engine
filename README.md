@@ -78,10 +78,7 @@ The constellation web utilizes high-performance proximity math mapping to render
 ## 👨‍💻 Author
 
 **Your Name**  
-GitHub: [your-github-username](https://github.com/your-github-username)  
+GitHub: Ganga07-code
 
 ---
 
-## 📜 License
-
-This project is open-source and licensed under the **MIT License**.
