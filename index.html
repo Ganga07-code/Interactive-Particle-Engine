@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Canvas - Interactive Particle Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas1"></canvas>
+
+    <header class="app-header">
+        <h1>NEBULA CANVAS</h1>
+        <p>Interactive Particle Studio</p>
+    </header>
+
+    <button id="toggle-panel" aria-label="Toggle Settings">
+        <i class="fa-solid fa-sliders"></i>
+    </button>
+
+    <aside class="control-panel" id="controlPanel">
+        <div class="panel-header">
+            <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Settings</h2>
+            <p>Design your particle universe</p>
+        </div>
+
+        <div class="panel-section">
+            <h3>Presets</h3>
+            <div class="preset-grid">
+                <button class="preset-btn active" data-preset="galaxy">Galaxy</button>
+                <button class="preset-btn" data-preset="constellation">Neural Web</button>
+                <button class="preset-btn" data-preset="vortex">Vortex</button>
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>Interaction Mode</h3>
+            <div class="mode-select">
+                <button class="mode-btn active" data-mode="flow"><i class="fa-solid fa-wind"></i> Flow</button>
+                <button class="mode-btn" data-mode="attract"><i class="fa-solid fa-magnet"></i> Magnet</button>
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>Particle Physics</h3>
+            
+            <div class="control-group">
+                <label for="particle-size">Size: <span id="size-val">8</span>px</label>
+                <input type="range" id="particle-size" min="2" max="25" value="8" step="0.5">
+            </div>
+
+            <div class="control-group">
+                <label for="particle-speed">Speed: <span id="speed-val">3</span>x</label>
+                <input type="range" id="particle-speed" min="0.5" max="8" value="3" step="0.5">
+            </div>
+
+            <div class="control-group">
+                <label for="spawn-rate">Spawn Rate: <span id="spawn-val">5</span></label>
+                <input type="range" id="spawn-rate" min="1" max="15" value="5" step="1">
+            </div>
+
+            <div class="control-group">
+                <label for="gravity">Gravity: <span id="gravity-val">0</span></label>
+                <input type="range" id="gravity" min="-0.2" max="0.5" value="0" step="0.05">
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>Visual Style</h3>
+
+            <div class="control-group">
+                <label for="color-theme">Color Palette</label>
+                <div class="select-wrapper">
+                    <select id="color-theme">
+                        <option value="rainbow">Rainbow (Spectrum)</option>
+                        <option value="aurora">Aurora (Teal/Emerald)</option>
+                        <option value="cosmic">Cosmic (Indigo/Violet/Pink)</option>
+                        <option value="lava">Volcanic (Gold/Red)</option>
+                        <option value="mono">Neon Cyan</option>
+                        <option value="cyberpunk">Cyberpunk (Pink/Cyan)</option>
+                        <option value="forest">Forest Moss (Greens)</option>
+                        <option value="monochrome">Midnight Mono (White)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="particle-shape">Shape</label>
+                <div class="select-wrapper">
+                    <select id="particle-shape">
+                        <option value="circle">Circle</option>
+                        <option value="square">Square</option>
+                        <option value="star">Star</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="heart">Heart</option>
+                        <option value="ring">Ring</option>
+                        <option value="cross">Cross</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="trail-length">Trail Decay: <span id="trail-val">0.05</span></label>
+                <input type="range" id="trail-length" min="0.01" max="0.3" value="0.05" step="0.01">
+            </div>
+
+            <div class="control-group checkbox-group">
+                <label for="constellation-mode">
+                    <input type="checkbox" id="constellation-mode" checked>
+                    <span>Connect Particles (Constellation)</span>
+                </label>
+            </div>
+
+            <div class="control-group" id="connection-dist-group">
+                <label for="connection-dist">Connection Range: <span id="dist-val">100</span>px</label>
+                <input type="range" id="connection-dist" min="30" max="200" value="100" step="5">
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>Celebrations</h3>
+            <div class="preset-grid" style="margin-bottom: 1rem;">
+                <button class="celebrate-btn" data-celeb="fireworks"><i class="fa-solid fa-fireworks"></i> Fireworks</button>
+                <button class="celebrate-btn" data-celeb="confetti"><i class="fa-solid fa-gift"></i> Confetti</button>
+                <button class="celebrate-btn" data-celeb="supernova"><i class="fa-solid fa-circle-radiation"></i> Supernova</button>
+            </div>
+            
+            <div class="control-group name-celebrate-group">
+                <label for="name-input">Celebrate Your Name</label>
+                <div class="name-input-wrapper">
+                    <input type="text" id="name-input" placeholder="Type name..." maxlength="12">
+                    <button id="btn-celebrate-name" aria-label="Celebrate Name"><i class="fa-solid fa-rocket"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <button id="clear-canvas" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> Clear Canvas</button>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+</body>
+</html>

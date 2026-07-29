@@ -1,0 +1,547 @@
+:root {
+    --bg-dark: rgba(10, 10, 12, 0.75);
+    --bg-border: rgba(255, 255, 255, 0.08);
+    --bg-border-focus: rgba(255, 255, 255, 0.2);
+    --text-primary: #f3f4f6;
+    --text-muted: #9ca3af;
+    --accent: #22d3ee;
+    --accent-glow: rgba(34, 211, 238, 0.3);
+    --accent-hover: #06b6d4;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --glass-blur: blur(16px) saturate(180%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: #020205;
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    user-select: none;
+}
+
+#canvas1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* App Header Branding */
+.app-header {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 10;
+    pointer-events: none;
+    animation: fadeIn 1s ease-out;
+}
+
+.app-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+}
+
+.app-header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+}
+
+/* Toggle Menu Button */
+#toggle-panel {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 20;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-border);
+    backdrop-filter: var(--glass-blur);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+#toggle-panel:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: scale(1.05);
+}
+
+#toggle-panel.active {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Control Panel (Glassmorphism Sidebar) */
+.control-panel {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    bottom: 2rem;
+    width: 320px;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-border);
+    border-radius: 16px;
+    z-index: 15;
+    backdrop-filter: var(--glass-blur);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow-y: auto;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.control-panel.hidden {
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+    pointer-events: none;
+}
+
+.control-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.control-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.control-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.panel-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--bg-border);
+    padding-bottom: 1rem;
+}
+
+.panel-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.panel-header h2 i {
+    color: var(--accent);
+}
+
+.panel-header p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.panel-section {
+    margin-bottom: 1.5rem;
+}
+
+.panel-section h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+/* Preset Buttons Grid */
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.preset-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--bg-border);
+    border-radius: 8px;
+    padding: 0.6rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.preset-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--bg-border-focus);
+}
+
+.preset-btn.active {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.1);
+}
+
+/* Interaction Mode Selectors */
+.mode-select {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mode-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--bg-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.4rem;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.mode-btn i {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.mode-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--bg-border-focus);
+}
+
+.mode-btn.active {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.mode-btn.active i {
+    opacity: 1;
+}
+
+/* Control Group (Sliders and Selects) */
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.control-group label span {
+    color: var(--accent);
+    font-family: monospace;
+}
+
+/* Custom range inputs */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    border: 2px solid var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: all 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--accent);
+    transform: scale(1.2);
+}
+
+/* Custom dropdown wrappers */
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+select {
+    width: 100%;
+    padding: 0.6rem 2rem 0.6rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--bg-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+select:focus {
+    border-color: var(--accent);
+    background: rgba(10, 10, 12, 0.95);
+}
+
+/* Custom checkbox wrappers */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    user-select: none;
+}
+
+.checkbox-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--bg-border);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.65rem;
+    color: #000;
+}
+
+/* Panel Footer & Action Buttons */
+.panel-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bg-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.btn-danger:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+}
+
+/* Celebration buttons */
+.celebrate-btn {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 8px;
+    padding: 0.6rem 0.4rem;
+    color: #e9d5ff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.celebrate-btn i {
+    font-size: 1rem;
+    color: #c084fc;
+}
+
+.celebrate-btn:hover {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: #c084fc;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+}
+
+.celebrate-btn:active {
+    transform: scale(0.95);
+}
+
+/* Name Celebration Input */
+.name-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+#name-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--bg-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#name-input:focus {
+    border-color: var(--accent);
+    background: rgba(10, 10, 12, 0.9);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+#btn-celebrate-name {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    border: none;
+    border-radius: 8px;
+    width: 2.5rem;
+    color: white;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#btn-celebrate-name:hover {
+    background: linear-gradient(135deg, #22d3ee 0%, #2563eb 100%);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
+    transform: translateY(-1px);
+}
+
+#btn-celebrate-name:active {
+    transform: translateY(1px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .app-header {
+        top: 1rem;
+        left: 1rem;
+    }
+    .app-header h1 {
+        font-size: 1.4rem;
+    }
+    .app-header p {
+        font-size: 0.75rem;
+    }
+    #toggle-panel {
+        top: 1rem;
+        right: 1rem;
+    }
+    .control-panel {
+        top: 4.5rem;
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
+        width: auto;
+        padding: 1.25rem;
+    }
+}
