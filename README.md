@@ -74,6 +74,10 @@ Combines standard desktop mouse listeners with mobile touch gestures (`touchstar
 The constellation web utilizes high-performance proximity math mapping to render connections dynamically between active particles without causing browser lag.
 
 ---
+## Live Link
+https://interactive-particle-engine.vercel.app
+
+---
 
 ## 👨‍💻 Author
 
